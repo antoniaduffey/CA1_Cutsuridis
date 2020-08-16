@@ -2,7 +2,7 @@
 % and determine quality of recall
 % Summary diagram for Hippocampus paper
 % BPG 23-1-09
-scaledDown
+scaledDown=1
 
 
 if scaledDown==.2

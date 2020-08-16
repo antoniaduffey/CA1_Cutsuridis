@@ -32,15 +32,16 @@ h.load_file("nrngui.hoc") # load_file
 #################
 # PARAMETERS
 #################
-keepoldtypo=0 # rerun the old version of the code, including typos
+keepoldtypo=0 # 1: rerun the 2009 published version of the code, including typos
 cellClasses.keepoldtypo = keepoldtypo
-usepar = 1
+
+usepar = 1# 1: run using parallel processing (code will run without error on a single processor as well)
 netfcns.usepar = usepar
 printflag = 1 # 0: almost silent, 1: some prints, 2: many prints
 netfcns.printflag = printflag
 
 # Set default values for parameters that can be passed in at the command line
-plotflag = 1
+plotflag = 0
 network_scale = 1 # set to 1 for full scale or 0.2 for a quick test with a small network
 scaleEScon = 1 # scaling factor for number of excitatory connections in the network, should be set to 1
 
@@ -49,35 +50,27 @@ simname="par"
 connect_random_low_start_ = 1  # low seed for mcell_ran4_init()
 
 netfile = 'N100S20P5'
-electrostim = 0 # 0 = no stimulation, 1 = stimulation according to parameters set farther down in code
+electrostim = .0 # 0 = no stimulation, any other number is the amplitude of curent injection to all cells (in nA)
 percentDeath = .0 # fraction of pyramidal cells to kill off
 
 
-# Check for parameters being passed in via the command line
-argadd = 1
-startlen = 1
-import subprocess
-result = subprocess.run('hostname', stdout = subprocess.PIPE)
-if (result.stdout.decode('utf-8')[:3] == "scc"): # scc has an odd way of accounting for command line arguments
-    argadd = 2
-    startlen = 5
-    
-if len(sys.argv)>(startlen):
-    simname = sys.argv[startlen]
-    if len(sys.argv)>(argadd+startlen):
-        percentDeath = float(sys.argv[argadd+startlen])
-        if len(sys.argv)>(2*argadd+startlen):
-            electrostim = float(sys.argv[2*argadd+startlen])
-            if len(sys.argv)>(3*argadd+startlen):
-                numCycles = int(sys.argv[3*argadd+startlen])
-                if len(sys.argv)>(4*argadd+startlen):
-                    connect_random_low_start_ = float(sys.argv[4*argadd+startlen])
-                        
+### Command line parameters
+###########################
+import simtools
+
+varnames=["simname","percentDeath","electrostim","numCycles","connect_random_low_start_"]
+dict2define = simtools.get_sys_args(sys.argv,varnames)
+
+for key, value in dict2define.items():
+    globals()[key] = value                        
                         
 rmchars=['"',"'","\\"," "]
 
 for i in rmchars:
     simname = simname.replace(i,"")
+
+### Set Simulation Name and create results folder
+###########################
 
 fstem = "pyresults/" + simname
 
@@ -89,7 +82,7 @@ SPATT = calcSPATT(network_scale)
 
 SIMDUR = STARTDEL + (THETA*numCycles)    # simulation duration (msecs)
 
-h.tstop =  SIMDUR
+h.tstop =  100 #SIMDUR
 h.celsius = 34
 
 #%%
@@ -146,8 +139,6 @@ i=0
 pcst = pc.id()
 core_i = 0
 newcell = None
-
-
 
 for pop in poplist:
     pop_by_name[pop.popname] = pop
@@ -329,8 +320,6 @@ nclist = []
 # # Make connections with data from above
 for conn in connlist: 
     conn.connsMade = netfcns.connectcells(cells,ranlist, nclist, pop_by_name, conn.popname, conn.prepop, synstart=conn.synst, synend=conn.synend, npresyn=conn.prenum, weight=conn.weight, delay= conn.delay, pc = pc)
-    #if (printflag>1):
-    #    print("newtar starts with ", pop_by_name[conn.popname].gidst, " and pre starts with ", pop_by_name[conn.prepop].gidst , " and conns made = ", conn.connsMade)
 
 #netfcns.mkinputs(cells, pop_by_name['CA3Cell'].gidst, pop_by_name['ECCell'].gidst, pop_by_name['SEPCell'].gidst, ntot, pop_by_name)
 # EC input to PCs
@@ -526,5 +515,3 @@ if usepar==1:
     pc.gid_clear()
     pc.runworker()
     pc.done()
-    # h.quit()
-    # quit()
