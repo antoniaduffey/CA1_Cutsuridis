@@ -50,15 +50,12 @@ simname="par"
 connect_random_low_start_ = 1  # low seed for mcell_ran4_init()
 
 netfile = 'N100S20P5'
-electrostim = .0 # 0 = no stimulation, any other number is the amplitude of curent injection to all cells (in nA)
-percentDeath = .0 # fraction of pyramidal cells to kill off
-
 
 ### Command line parameters
 ###########################
 import simtools
 
-varnames=["simname","percentDeath","electrostim","numCycles","connect_random_low_start_"]
+varnames=["simname","numCycles","connect_random_low_start_"]
 dict2define = simtools.get_sys_args(sys.argv,varnames)
 
 for key, value in dict2define.items():
@@ -344,55 +341,6 @@ netfcns.mkEC(cells, ranlist, pop_by_name, pc)
 
 netfcns.spikerecord(cells,pc)
 results = netfcns.vrecord(cells,pop_by_name, iPPC, iNPPC,pc)
-
-#%% Cell Death and Electrostim
-
-num2pick = int(percentDeath*pop_by_name["PyramidalCell"].num) # number of cells
-
-deadlist = []
-
-new_random = h.Random(400)
-new_random.discunif(pop_by_name["PyramidalCell"].gidst, pop_by_name["PyramidalCell"].gidend)
-
-for x in range(num2pick):
-    # pick a random number that corresponds to a specific pyramidal cell
-    # append that number to the deadlist
-    tmpvar = int(new_random.repick())
-    while (deadlist.count(tmpvar)>0):
-        tmpvar = int(new_random.repick())
-        
-    deadlist.append(tmpvar)
-
-if (pc.id()==0):
-    print("List of cells that died:")
-list_clamps=[]
-for cell2kill in deadlist:
-    if (pc.id()==0):
-        print(cell2kill)
-    if (pc.gid_exists(cell2kill)):
-        model_cell = pc.gid2cell(cell2kill)
-        # keep remaining lines that add an IClamp and set its properties
-    
-        stimobj = h.IClamp(model_cell.soma(0.5))
-        stimobj.delay = 2
-        stimobj.dur = SIMDUR
-        stimobj.amp = -.4    
-        list_clamps.append(stimobj)
-
-list_of_stims=[]
-if (electrostim>0):
-    for cell in range(pop_by_name["PyramidalCell"].gidst, pop_by_name["PyramidalCell"].gidend):
-        if (deadlist.count(cell)==0 and pc.gid_exists(cell)):        
-            model_cell = pc.gid2cell(cell)
-        
-            electclamp = h.IClamp(model_cell.soma(0.5))
-            electclamp.delay = 2
-            electclamp.dur = SIMDUR
-            electclamp.amp = electrostim # nA .... (1000 pA) 
-            list_of_stims.append(electclamp)
-            # myvec = h.Vector() 
-            # myvec # fill with a pattern
-            # myvec.play(electclamp.amp) 
 
 #%%
 
