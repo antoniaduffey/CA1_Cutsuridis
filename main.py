@@ -413,11 +413,11 @@ perf = fig9.calc_performance(simname,netfile,numCycles, network_scale)
 data2save={'dt':h.dt, 'tstop':h.tstop, 'netfile':netfile, 'simname':simname, 'performance':perf, 'electrostim':electrostim, 'percentDeath':percentDeath, 'network_scale':network_scale}
 
 #%%
-# import pickle
+import pickle
 
-# # Save results in a pickle file:
-# with open('pyresults/' + simname+'.pkl', 'w') as f:  # Python 3: open(..., 'wb')
-#     pickle.dump((spikeout, vout, data2save), f)
+# Save results in a pickle file:
+with open('pyresults/' + simname+'.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
+    pickle.dump((spikeout, vout, data2save), f)
 
 with open('pyresults/' + simname+'_performance.txt', 'w') as f:  # Python 3: open(..., 'wb')
     f.write("{:.3f}\n".format(perf))

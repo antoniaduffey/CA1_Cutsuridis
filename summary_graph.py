@@ -4,6 +4,13 @@ Created on Tue Aug 11 10:30:39 2020
 
 @author: mbezaire
 """
+# import pickle
+
+# with open('pyresults/' + simname+'.pkl', 'rb') as f:  # Python 3: open(..., 'wb')
+#     spikeout, vout, data2save = pickle.load(f)
+    # data2save["performance"]
+    # data2save["electrostim"]
+    # data2save["percentDeath"]
 
 runs2include=["par","sim1"]
 
