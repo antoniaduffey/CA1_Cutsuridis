@@ -6,21 +6,20 @@
 # soma, dend1, dend2, axon
 # all
 from neuron import h
+from Model_cell import modelcell
 
-class OLMCell():
+class OLMCell(modelcell):
     """ OLM Cell definition """
     def __init__(self, gid = -1):
-        self.x = 0; self.y = 0; self.z = 0
+        super().__init__()
         self.gid = gid
         self.create_sections() 
         self.build_topology()
         self.build_subsets() # subsets()
         self.define_geometry() # geom()
         self.define_biophysics() # biophys()
-        # pre_list = new List()
         self.addSynapses() # synapses
-        self.is_art = 0
-        self.nc = []
+
         
     def __repr__(self):
         return "OLM Cell {}".format(self.gid)
@@ -70,10 +69,6 @@ class OLMCell():
 
     def define_biophysics(self):
         self.Rm = 20000 # 1/5e-05    
-        
-        for sec in self.all:
-            self.Ra = 150
-            self.cm = 1.3
 
         self.soma.insert("IA")
         self.soma.insert("Ih")
@@ -119,6 +114,10 @@ class OLMCell():
             seg.gnaaxon_Naaxon = 0.01712
             seg.gl_Naaxon = 1/self.Rm
             seg.el_Naaxon = -70
+        
+        for sec in self.all:
+            sec.Ra = 150
+            sec.cm = 1.3
 
 
     def connect2target(self,target, delay = 1, weight=0.04): # { localobj nc #$o1 target point process, optional $o2 returned NetCon
@@ -159,4 +158,3 @@ class OLMCell():
         syn_.tau1 = 35
         syn_.tau2 = 100
         syn_.e = -75
-

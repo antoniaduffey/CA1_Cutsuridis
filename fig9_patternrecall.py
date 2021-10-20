@@ -90,7 +90,7 @@ def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1):
     lw=2
     plt.subplots_adjust(hspace=.5)
     plt.subplot(4,1,1)
-    plt.plot(sp[:,0], sp[:,1], 'k.', marker='.', ms=.5)   # raster plot of Sep, EC & CA3 spiking
+    plt.plot(sp[:,0], sp[:,1], 'k.', ms=.5)   # raster plot of Sep, EC & CA3 spiking
     plt.title(simname+' (Pattern #'+str(CPATT)+')\n(a) Input spikes')
     plt.ylabel('Input\nCell #')
     plt.xlim([STIME, ETIME])
@@ -99,7 +99,7 @@ def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1):
     ax.axes.xaxis.set_ticklabels([])
 
     plt.subplot(4,1,2)
-    plt.plot(sp[:,0], sp[:,1], 'k.', marker='.', ms=1)   # raster plot of PC spiking
+    plt.plot(sp[:,0], sp[:,1], 'k.', ms=1)   # raster plot of PC spiking
     plt.title('(b) Pyramidal cell spikes')
     plt.ylabel('Pyramidal\nCell #')
     plt.xlim([STIME, ETIME])

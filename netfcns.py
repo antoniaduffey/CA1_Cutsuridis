@@ -340,6 +340,7 @@ def spikeout(cells,fstem,pc):
     
     pc.barrier()  # wait for all hosts to get to this point
     for rank in range(1,pc.nhost()):
+        pc.barrier()
         if (rank==pc.id()):
             with open("{}_spt.dat".format(fstem), 'a') as f:
 
