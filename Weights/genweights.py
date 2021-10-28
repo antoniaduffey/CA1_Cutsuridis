@@ -13,8 +13,8 @@ Created on Thu Oct 21 11:11:46 2021
 import numpy as np
  
 ### save files
-FWGT = 'weights.csv'   # weights file
-FPATT = 'pattern.csv' # patterns file
+FWGT = 'weights.csv'   # weights savefile
+FPATT = 'pattern.csv' # patterns savefile
     
 ###generate weight matrix
 num_cell = 100   # number of neurons
@@ -37,9 +37,7 @@ for x in range(0, num_patt):
     p[pi,x] = 1
     # store in weight matrix
     z = np.transpose(p[:,x].reshape(100, 1 ))
-    y= p[:,x]
-    test = np.matmul(p[:,x].reshape(100, 1 ), z)
-    w += test
+    w += np.matmul(p[:,x].reshape(100, 1 ), z)
 
 w = w > 0
 
