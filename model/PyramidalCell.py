@@ -493,10 +493,10 @@ class PyramidalCell(modelcell):
         
         for seg in self.axon:
             seg.gbar_km     = 0.5*0.06
-            seg.gnabar_hha2 = 0.1
-            seg.gkbar_hha2  = 0.1/5
-            seg.gl_hha2 = 0
-            seg.el_hha2 = -70
+            seg.gnabar_hha = 0.1
+            seg.gkbar_hha  = 0.1/5
+            seg.gl_hha = 0
+            seg.el_hha = -70
             seg.g_pas = 1/Rm
 
 
